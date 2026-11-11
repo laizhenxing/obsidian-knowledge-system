@@ -1,0 +1,73 @@
+filters:
+  and:
+    - 'file.ext == "md"'
+    - not:
+        - 'file.inFolder("90-系统/模板")'
+properties:
+  file.name:
+    displayName: "名称"
+  status:
+    displayName: "状态"
+  next_action:
+    displayName: "下一步行动"
+  updated:
+    displayName: "更新日期"
+  created:
+    displayName: "创建日期"
+  author:
+    displayName: "作者"
+  source:
+    displayName: "来源"
+  file.folder:
+    displayName: "位置"
+  file.mtime:
+    displayName: "修改时间"
+views:
+  - type: table
+    name: "待整理"
+    filters:
+      or:
+        - 'file.inFolder("00-收件箱")'
+        - 'status == "inbox"'
+    order:
+      - file.name
+      - created
+      - file.folder
+  - type: table
+    name: "进行中"
+    filters:
+      and:
+        - 'type == "project"'
+        - 'status == "active"'
+    order:
+      - file.name
+      - next_action
+      - updated
+  - type: table
+    name: "最近更新"
+    limit: 10
+    filters:
+      and:
+        - 'status == "active"'
+        - or:
+            - 'type == "note"'
+            - 'type == "moc"'
+    sort:
+      - property: file.mtime
+        direction: DESC
+    order:
+      - file.name
+      - updated
+      - file.folder
+  - type: table
+    name: "继续阅读"
+    filters:
+      and:
+        - 'file.inFolder("40-资源/阅读学习")'
+        - 'type == "resource"'
+        - 'status == "active"'
+    order:
+      - file.name
+      - author
+      - source
+      - updated
